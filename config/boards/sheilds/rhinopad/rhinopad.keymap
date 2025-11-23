@@ -1,1 +1,70 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+
+/* Layer indices */
+#define _BASE 0
+#define _FN   1
+
+/ {
+    behaviors {
+        /* Encoder rotate → keypress behavior */
+        rot_kp: behavior_sensor_rotate_kp {
+            compatible = "zmk,behavior-sensor-rotate-var";
+            label = "ENC_KP";
+            #sensor-binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        /************************
+         * LAYER 0 — BASE
+         *
+         * Layout (13 keys):
+         *
+         *   =    9    8    7   DEL
+         *        6    5    4
+         *   .    3    2    1    0
+         *
+         ************************/
+        base_layer {
+            label = "BASE";
+
+            bindings = <
+                &kp EQUAL   &kp N9   &kp N8   &kp N7   &kp DEL
+                             &kp N6   &kp N5   &kp N4
+                &kp DOT     &kp N3   &kp N2   &kp N1   &kp N0
+            >;
+
+            /* Encoder rotate = scroll left/right (arrow keys) */
+            sensor-bindings = <&rot_kp &kp K_LEFT &kp K_RIGHT>;
+        };
+
+        /************************
+         * LAYER 1 — FN / BLUETOOTH
+         *
+         * Keep a simple BT management layer:
+         *
+         *   BT_CLR   ____   ____   ____   BOOT
+         *            PF0    PF1    PF2
+         *   ____     ____   ____   ____   TOG_FN
+         *
+         ************************/
+        fn_layer {
+            label = "FN";
+
+            bindings = <
+                &bt BT_CLR   &none        &none        &none        &bootloader
+                              &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2
+                &none        &none        &none        &none        &tog _FN
+            >;
+
+            /* Same encoder behavior on this layer */
+            sensor-bindings = <&rot_kp &kp K_LEFT &kp K_RIGHT>;
+        };
+    };
+};
 
