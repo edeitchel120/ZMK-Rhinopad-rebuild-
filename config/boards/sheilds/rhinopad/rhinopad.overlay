@@ -1,1 +1,7 @@
 
+#include "rhinopad.dtsi"
+
+&encoder {
+	status = "okay";
+};
+
